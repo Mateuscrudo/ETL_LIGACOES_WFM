@@ -1,5 +1,8 @@
 import sqlite3
 import time
+import os
+from datetime import date, datetime
+import pandas as pd
 from colorama import Fore, Style, init
 from terminal import titulo
 from config import *
@@ -8,7 +11,11 @@ def criar_sqlite(df):
 
     titulo("4 - GERANDO SQLITE")
 
-    resp = input("\nCriar banco SQLite? (S/N): ").upper()
+    resp = (
+        "S"
+        if os.environ.get("EXECUCAO_AGENTE") == "1"
+        else input("\nCriar banco SQLite? (S/N): ").upper()
+    )
 
     if resp != "S":
         return
@@ -24,9 +31,28 @@ def criar_sqlite(df):
 
         return
 
+    os.makedirs(os.path.dirname(BANCO_SQL), exist_ok=True)
     conn = sqlite3.connect(BANCO_SQL)
 
-    df_sql = df[COLUNAS_SQLITE]
+    df_sql = df[COLUNAS_SQLITE].copy()
+    # Colunas mistas podem conter Timestamp como objeto, sem conversão
+    # automática do pandas antes de chegar ao driver SQLite.
+    def valor_sqlite(valor):
+        if valor is None or valor is pd.NA or valor is pd.NaT:
+            return None
+        if isinstance(valor, (pd.Timestamp, datetime)):
+            return valor.isoformat(sep=" ")
+        if isinstance(valor, date):
+            return valor.isoformat()
+        return valor
+
+    for coluna in df_sql.columns:
+        if df_sql[coluna].dtype == object:
+            df_sql[coluna] = pd.Series(
+                [valor_sqlite(valor) for valor in df_sql[coluna]],
+                index=df_sql.index,
+                dtype=object,
+            )
 
     df_sql.to_sql(
         TABELA,
@@ -60,7 +86,7 @@ def criar_sqlite(df):
 
     inicio = time.time()
 
-BANCO = r"C:\Users\MateusCrudodeBarros\DEEPESSOAS\PROJETOS - SABESP - PERFORMANCE GUARUJÁ\PERFORMANCE_GUARUJA_AGUA\EXECUÇÃO\AUTOMATIZAÇÃO\PYTHON\DATABASE LIGAÇÕES WFM\database_SQL\base_unificada.db"
+BANCO = BANCO_SQL
 
 def conectar():
     return sqlite3.connect(BANCO)

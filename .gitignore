@@ -1,38 +1,18 @@
-# Python
 __pycache__/
-*.py[cod]
-*.class
-
-# Ambientes virtuais
+*.pyc
 .venv/
-venv/
-env/
-
-# Dados
-*.xlsx
-*.xls
-*.csv
-*.db
-*.sqlite
-*.sqlite3
-
-# Logs
-Logs/
-*.log
-
-# Configurações e credenciais
 .env
-.env.*
-
-# IDE
-.vscode/
-.idea/
-
-# Sistema
-Thumbs.db
-.DS_Store
-
-# Temporários
-*.tmp
-*.temp
-*.bak
+.streamlit/secrets.toml
+work/
+logs/
+LOG/
+saida/
+SAIDA/
+SAIDA_AGUA/
+BACKUP/
+backups/
+*.db
+*.xlsx
+# Somente amostras sintÃ©ticas revisadas entram no Git.
+!ENTRADA/**/*.xlsx
+!Bases/*.db

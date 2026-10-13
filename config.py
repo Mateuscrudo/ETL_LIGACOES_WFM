@@ -1,7 +1,10 @@
 from mimetypes import init
 import os
+from pathlib import Path
 from datetime import datetime
 from colorama import Fore, Style, init
+
+BASE_DIR = Path(__file__).resolve().parent
 
 TEMPOS = {}
 
@@ -24,21 +27,26 @@ def erro(texto):
 def info(texto):
     print(Fore.CYAN + "ℹ " + texto)
 
-PASTA_DADOS = r"C:\Users\MateusCrudodeBarros\DEEPESSOAS\PROJETOS - SABESP - PERFORMANCE GUARUJÁ\PERFORMANCE_GUARUJA_AGUA\EXECUÇÃO\BACKOFFICE\CONFERENCIA\Reconferencia\Ligações de água"
-PASTA_LOGS = r"C:\Users\MateusCrudodeBarros\DEEPESSOAS\PROJETOS - SABESP - PERFORMANCE GUARUJÁ\PERFORMANCE_GUARUJA_AGUA\EXECUÇÃO\AUTOMATIZAÇÃO\PYTHON\DATABASE LIGAÇÕES WFM\ETL_SABESP\logs"
-PASTA_EXCEL = r"C:\Users\MateusCrudodeBarros\DEEPESSOAS\PROJETOS - SABESP - PERFORMANCE GUARUJÁ\PERFORMANCE_GUARUJA_AGUA\EXECUÇÃO\AUTOMATIZAÇÃO\PYTHON\DATABASE LIGAÇÕES WFM\database_excel"
-PASTA_SQLITE = r"C:\Users\MateusCrudodeBarros\DEEPESSOAS\PROJETOS - SABESP - PERFORMANCE GUARUJÁ\PERFORMANCE_GUARUJA_AGUA\EXECUÇÃO\AUTOMATIZAÇÃO\PYTHON\DATABASE LIGAÇÕES WFM\database_SQL"
+PASTA_DADOS = os.path.join(BASE_DIR, "ENTRADA", "WFM")
+PASTA_LOGS = BASE_DIR / "logs"
+PASTA_SAIDA = BASE_DIR / "saida"
+PASTA_EXCEL = PASTA_SAIDA
+PASTA_SQLITE = PASTA_SAIDA
+PASTA_CONTROLE = os.path.join(BASE_DIR,"ENTRADA", "SHAREPOINT")
+ARQUIVO_EXCEL = PASTA_SAIDA / "base_obra.xlsx"
+BANCO_SQL = PASTA_SAIDA / "base_obra.db"
 
-ARQUIVO_EXCEL = os.path.join(PASTA_EXCEL, "base_unificada.xlsx")
-BANCO_SQL = os.path.join(PASTA_SQLITE, "base_unificada.db")
-
-LOG = os.path.join(PASTA_LOGS,f"log_ETL_{datetime.now():%Y%m%d_%H%M%S}.txt")
+LOG = PASTA_LOGS / f"etl_obra_{datetime.now():%Y-%m-%d_%H-%M-%S}.txt"
 
 TABELA = "adesoes"
 
 COLUNAS_SQLITE = [
     "Número OS",
     "MATRICULA",
+    "HD_WFM",
+    "HD",
+    "ORIGEM_HD",
+    "DATA_EXECUCAO",
     "Notas de Acatamento",
     "PDE",
     "Endereço",

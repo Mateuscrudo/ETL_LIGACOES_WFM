@@ -1,0 +1,9 @@
+# Dependencias do fluxo aprovado; versoes presentes na validacao.
+pandas==3.0.5
+openpyxl==3.1.5
+XlsxWriter==3.2.9
+colorama==0.4.6
+tqdm==4.70.0
+# Necessario somente para ler fontes .xls (nao instalado no ambiente atual).
+xlrd>=2.0.2,<3
+# Testes oficiais usam unittest, incluido no Python; pytest e opcional.
